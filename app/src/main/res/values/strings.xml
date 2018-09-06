@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Football Match</string>
+    <string name="date_event">Sab, 10 Sep 2018</string>
+    <string name="home_team">Man. United</string>
+    <string name="home_score">1</string>
+    <string name="away_score">0</string>
+    <string name="away_team">Man. City</string>
+    <string name="formation">4-2-4-1</string>
+    <string name="stadium_time">Stadion 1, 16.00</string>
+    <string name="goal_detail">28:Person1</string>
+</resources>
