@@ -1,6 +1,7 @@
 package my.project.chongieball.footballmatch.injection.module
 
 import android.app.Application
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 
@@ -11,5 +12,5 @@ import dagger.Provides
 class AppModule {
 
     @Provides
-    fun provideContext(application: Application) : Application = application
+    fun provideContext(application: Application) : Context = application
 }

@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class DataEventResponse(
         @SerializedName("idEvent")
-        var idEvent: String? = "Not Found",
+        var idEvent: String = "Not Found",
 
         @SerializedName("strEvent")
         var eventName: String? = "Not Found",

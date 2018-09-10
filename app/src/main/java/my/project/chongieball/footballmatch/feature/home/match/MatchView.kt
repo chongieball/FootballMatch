@@ -1,4 +1,4 @@
-package my.project.chongieball.footballmatch.feature.home
+package my.project.chongieball.footballmatch.feature.home.match
 
 import my.project.chongieball.footballmatch.data.network.response.events.DataEventResponse
 import my.project.chongieball.footballmatch.feature.base.BaseView

@@ -30,6 +30,13 @@
             android:text="Next Match"
             android:icon="@drawable/ic_next"/>
 
+        <android.support.design.widget.TabItem
+            android:id="@+id/tabFav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Favorites"
+            android:icon="@drawable/ic_favorites"/>
+
     </android.support.design.widget.TabLayout>
 
     <FrameLayout

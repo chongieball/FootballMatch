@@ -8,4 +8,6 @@
     <string name="formation">4-2-4-1</string>
     <string name="stadium_time">Stadion 1, 16.00</string>
     <string name="goal_detail">28:Person1</string>
+
+    <string name="favorites">Favorites</string>
 </resources>

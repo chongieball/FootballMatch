@@ -4,8 +4,10 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import my.project.chongieball.footballmatch.feature.detail.DetailActivity
 import my.project.chongieball.footballmatch.feature.detail.DetailModule
-import my.project.chongieball.footballmatch.feature.home.MatchFragment
-import my.project.chongieball.footballmatch.feature.home.MatchModule
+import my.project.chongieball.footballmatch.feature.home.favorite.FavoriteFragment
+import my.project.chongieball.footballmatch.feature.home.favorite.FavoriteModule
+import my.project.chongieball.footballmatch.feature.home.match.MatchFragment
+import my.project.chongieball.footballmatch.feature.home.match.MatchModule
 
 /**
  * Created by chongieball on 04/09/18.
@@ -18,4 +20,7 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = [DetailModule::class])
     abstract fun bindDetailActivity() : DetailActivity
+
+    @ContributesAndroidInjector(modules = [FavoriteModule::class])
+    abstract fun bindFavoriteFragment() : FavoriteFragment
 }

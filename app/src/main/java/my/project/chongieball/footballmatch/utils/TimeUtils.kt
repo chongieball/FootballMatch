@@ -14,13 +14,6 @@ class TimeUtils {
             SimpleDateFormat("EEE, dd MMM yyy").format(this)
         }
 
-        fun formatGMT(date: String, time: String): Date? {
-            val formatter = SimpleDateFormat("dd/MM/yy HH:mm:ss")
-            formatter.timeZone = TimeZone.getTimeZone("UTC")
-            val dateTime = "$date $time"
-            return formatter.parse(dateTime)
-        }
-
         fun formatGMT(date: String?): Date? {
             val formatter = SimpleDateFormat("dd/MM/yy")
             formatter.timeZone = TimeZone.getTimeZone("UTC")

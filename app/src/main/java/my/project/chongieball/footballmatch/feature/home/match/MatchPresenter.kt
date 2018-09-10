@@ -1,4 +1,4 @@
-package my.project.chongieball.footballmatch.feature.home
+package my.project.chongieball.footballmatch.feature.home.match
 
 import my.project.chongieball.footballmatch.feature.base.Presenter
 

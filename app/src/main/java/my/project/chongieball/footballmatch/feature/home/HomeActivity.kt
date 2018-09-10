@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import my.project.chongieball.footballmatch.R
 import kotlinx.android.synthetic.main.activity_main.*
+import my.project.chongieball.footballmatch.feature.home.favorite.FavoriteFragment
+import my.project.chongieball.footballmatch.feature.home.match.MatchFragment
 import org.jetbrains.anko.design.coroutines.onTabSelectedListener
 
 /**
@@ -24,7 +26,8 @@ class HomeActivity : AppCompatActivity() {
         tl.onTabSelectedListener {
             onTabSelected {
                 if (it?.position == 0) replaceFragment(MatchFragment.newInstance(0))
-                else replaceFragment(MatchFragment.newInstance(1))
+                else if (it?.position == 1) replaceFragment(MatchFragment.newInstance(1))
+                else replaceFragment(FavoriteFragment.newInstance())
             }
         }
     }

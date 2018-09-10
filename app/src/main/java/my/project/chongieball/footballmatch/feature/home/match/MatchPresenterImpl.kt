@@ -1,4 +1,4 @@
-package my.project.chongieball.footballmatch.feature.home
+package my.project.chongieball.footballmatch.feature.home.match
 
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers

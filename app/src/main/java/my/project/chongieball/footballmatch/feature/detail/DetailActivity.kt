@@ -1,7 +1,10 @@
 package my.project.chongieball.footballmatch.feature.detail
 
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_detail.*
 import my.project.chongieball.footballmatch.R
@@ -11,6 +14,7 @@ import my.project.chongieball.footballmatch.utils.TimeUtils
 import my.project.chongieball.footballmatch.utils.invisible
 import my.project.chongieball.footballmatch.utils.visible
 import org.jetbrains.anko.alert
+import org.jetbrains.anko.design.snackbar
 import javax.inject.Inject
 
 /**
@@ -23,21 +27,70 @@ class DetailActivity : AppCompatActivity(), DetailView {
 
     private lateinit var dataEvent: DataEventResponse
     private var typeMatch: Int = 0
+    private var urlImageHome: String? = ""
+    private var urlImageAway: String? = ""
+    private var stadiumNameTime: String? = ""
+
+    private var menuItem: Menu? = null
+    private var isFavorite: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
+        supportActionBar?.title = "Match Detail"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         dataEvent = intent.getParcelableExtra("data")
         typeMatch = intent.getIntExtra("type_match", 0)
 
         presenter.setView(this)
+        presenter.checkIsFavorite(dataEvent.idEvent)
     }
 
     override fun onResume() {
         super.onResume()
         presenter.getDetail(dataEvent, typeMatch)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.detail_menu, menu)
+        menuItem = menu
+        setFavorite()
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            R.id.add_to_favorite -> {
+                if (isFavorite) removeFromFavorite() else addToFavorite()
+
+                isFavorite = !isFavorite
+                setFavorite()
+
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun addToFavorite() {
+        presenter.insertToDb(dataEvent, typeMatch)
+    }
+
+    private fun removeFromFavorite() {
+        presenter.removeToDb(dataEvent.idEvent)
+    }
+
+    private fun setFavorite() {
+        if (isFavorite) menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_added_favorite)
+        else menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_add_favorite)
     }
 
     override fun showLoading() {
@@ -53,6 +106,10 @@ class DetailActivity : AppCompatActivity(), DetailView {
     }
 
     override fun showDetail(matchDetail: DataEventResponse, urlImageHome: String?, urlImageAway: String?, stadiumNameAndTime: String?) {
+        this.urlImageHome = urlImageHome
+        this.urlImageAway = urlImageAway
+        this.stadiumNameTime = stadiumNameAndTime
+
         if (typeMatch == 1) cvMatchDetail.invisible()
         else cvMatchDetail.visible()
 
@@ -84,5 +141,13 @@ class DetailActivity : AppCompatActivity(), DetailView {
 
     override fun onError(message: String?) {
         alert(message.toString()).show()
+    }
+
+    override fun onTransactionDb(message: String) {
+        snackbar(cvGoalDetails, message).show()
+    }
+
+    override fun isFavorite(isFavorite: Boolean) {
+        this.isFavorite = isFavorite
     }
 }

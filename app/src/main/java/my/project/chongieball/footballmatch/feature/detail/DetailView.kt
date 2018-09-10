@@ -10,4 +10,8 @@ interface DetailView : BaseView {
 
     fun showDetail(matchDetail: DataEventResponse, urlImageHome: String?, urlImageAway: String?,
                    stadiumNameAndTime: String?)
+
+    fun onTransactionDb(message: String)
+
+    fun isFavorite(isFavorite: Boolean)
 }

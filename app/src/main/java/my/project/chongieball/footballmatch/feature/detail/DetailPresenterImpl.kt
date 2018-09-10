@@ -1,19 +1,25 @@
 package my.project.chongieball.footballmatch.feature.detail
 
+import android.database.sqlite.SQLiteConstraintException
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import my.project.chongieball.footballmatch.data.db.DatabaseHelper
+import my.project.chongieball.footballmatch.data.db.Favorite
 import my.project.chongieball.footballmatch.data.network.Service
 import my.project.chongieball.footballmatch.data.network.response.events.DataEventResponse
 import my.project.chongieball.footballmatch.data.network.response.team.DataTeamResponse
 import my.project.chongieball.footballmatch.feature.base.BasePresenter
+import org.jetbrains.anko.db.classParser
+import org.jetbrains.anko.db.delete
+import org.jetbrains.anko.db.insert
+import org.jetbrains.anko.db.select
 import javax.inject.Inject
 
-class DetailPresenterImpl @Inject constructor(val service: Service) : BasePresenter<DetailView>(),
+class DetailPresenterImpl @Inject constructor(val service: Service, val dbHelper: DatabaseHelper) : BasePresenter<DetailView>(),
         DetailPresenter {
 
     lateinit var dataEvent : DataEventResponse
     private var urlImageHome: String = ""
-    private var urlImageAway: String = ""
     private var stadiumNameAndTime: String = ""
     private var typeMatchP: Int = 0
 
@@ -78,5 +84,57 @@ class DetailPresenterImpl @Inject constructor(val service: Service) : BasePresen
                             }
                         }
                 )
+    }
+
+    override fun insertToDb(event: DataEventResponse, typeMatch: Int) {
+        try {
+            dbHelper.use {
+                insert(Favorite.TABLE_FAVORITE,
+                        Favorite.EVENT_ID to event.idEvent,
+                        Favorite.TYPE_MATCH to typeMatch,
+                        Favorite.EVENT_DATE to event.strDateEvent,
+                        Favorite.EVENT_TIME to event.strTime,
+                        Favorite.HOME_TEAM_NAME to event.homeTeamName,
+                        Favorite.HOME_SCORE to event.homeScore,
+                        Favorite.HOME_GOAL_DETAILS to event.homeGoalDetails,
+                        Favorite.HOME_RED_CARDS to event.homeRedCards,
+                        Favorite.HOME_YELLOW_CARDS to event.homeYellowCards,
+                        Favorite.HOME_FORMATION to event.homeFormation,
+                        Favorite.ID_HOME to event.idHomeTeam,
+                        Favorite.AWAY_TEAM_NAME to event.awayTeamName,
+                        Favorite.AWAY_SCORE to event.awayScore,
+                        Favorite.AWAY_GOAL_DETAILS to event.awayGoalDetails,
+                        Favorite.AWAY_RED_CARDS to event.awayRedCards,
+                        Favorite.AWAY_YELLOW_CARDS to event.awayYellowCards,
+                        Favorite.AWAY_FORMATION to event.awayFormation,
+                        Favorite.ID_AWAY to event.idAwayTeam
+                        )
+            }
+            getView()?.onTransactionDb("Added to favorite")
+        } catch (e: SQLiteConstraintException) {
+            getView()?.onTransactionDb(e.localizedMessage)
+        }
+    }
+
+    override fun removeToDb(id: String) {
+        try {
+            dbHelper.use {
+                delete(Favorite.TABLE_FAVORITE, "(EVENT_ID = {id})",
+                        "id" to id)
+                getView()?.onTransactionDb("Removed to favorite")
+            }
+        } catch (e: SQLiteConstraintException) {
+            getView()?.onTransactionDb(e.localizedMessage)
+        }
+    }
+
+    override fun checkIsFavorite(id: String) {
+        dbHelper.use {
+            val result = select(Favorite.TABLE_FAVORITE)
+                    .whereArgs("(EVENT_ID = {id})",
+                            "id" to id)
+            val favorite = result.parseList(classParser<Favorite>())
+            getView()?.isFavorite(!favorite.isEmpty())
+        }
     }
 }
